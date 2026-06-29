@@ -1,0 +1,88 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media / static (선택: 팀 정책에 맞게)
+media/
+staticfiles/
+
+# =========================
+# Virtualenv
+# =========================
+.venv/
+venv/
+ENV/
+env/
+
+# =========================
+# Packages / build
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.egg
+
+# =========================
+# Testing / coverage
+# =========================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+
+# =========================
+# Lint / type check
+# =========================
+.mypy_cache/
+.pyre/
+.ruff_cache/
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# =========================
+# Env files / secrets
+# =========================
+.env
+.env.*
+*.env
+inc.env
+!.env.example
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Celery / Redis (로그/덤프)
+# =========================
+celerybeat-schedule
+celerybeat.pid
+dump.rdb
+*.pid
+
+# =========================
+# Django collected static
+# =========================
+static/

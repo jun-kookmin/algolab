@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.pyc
+
+# Test / local artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+
+# Environment / secrets
+.env
+.env.*
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+*.dockerignore

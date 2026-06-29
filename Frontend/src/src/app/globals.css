@@ -1,0 +1,424 @@
+@import "tailwindcss";
+
+/* eng font */
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "inter";
+  src: url("/fonts/eng/Inter_ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+/* kr font */
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream1.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream2.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream3.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream4.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream5.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream6.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream7.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "sCoreDream";
+  src: url("/fonts/kr/SCDream8.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@theme {
+  /* Alpha Blacks */
+  --color-black-100: rgba(0, 0, 0, 1);
+  --color-black-90: rgba(0, 0, 0, 0.9);
+  --color-black-80: rgba(0, 0, 0, 0.8);
+  --color-black-70: rgba(0, 0, 0, 0.7);
+  --color-black-60: rgba(0, 0, 0, 0.6);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-40: rgba(0, 0, 0, 0.4);
+  --color-black-30: rgba(0, 0, 0, 0.3);
+  --color-black-20: rgba(0, 0, 0, 0.2);
+  --color-black-10: rgba(0, 0, 0, 0.1);
+
+  /* Alpha Whites */
+  --color-white-100: rgba(255, 255, 255, 1);
+  --color-white-90: rgba(255, 255, 255, 0.9);
+  --color-white-80: rgba(255, 255, 255, 0.8);
+  --color-white-70: rgba(255, 255, 255, 0.7);
+  --color-white-60: rgba(255, 255, 255, 0.6);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-white-40: rgba(255, 255, 255, 0.4);
+  --color-white-30: rgba(255, 255, 255, 0.3);
+  --color-white-20: rgba(255, 255, 255, 0.2);
+  --color-white-10: rgba(255, 255, 255, 0.1);
+
+  /* Brand Primary */
+  --color-primary-900: #1e2368;
+  --color-primary-800: #252d80;
+  --color-primary-700: #3643a0;
+  --color-primary-600: #4355d6;
+  --color-primary-500: #5061f0;
+  --color-primary-400: #6d7df2;
+  --color-primary-300: #8796f5;
+  --color-primary-200: #b0b8f8;
+  --color-primary-100: #d6dafb;
+  --color-primary-50: #f0f1fd;
+
+  /* Grey */
+  --color-grey-900: #0f1421;
+  --color-grey-800: #1d2432;
+  --color-grey-700: #343c4a;
+  --color-grey-600: #4b5362;
+  --color-grey-500: #666d7b;
+  --color-grey-400: #949aa6;
+  --color-grey-300: #d0d3d9;
+  --color-grey-200: #e3e5e9;
+  --color-grey-100: #f2f3f5;
+  --color-grey-50: #fafafb;
+
+  /*  Green */
+  --color-green-900: #14532d;
+  --color-green-800: #166534;
+  --color-green-700: #15803d;
+  --color-green-600: #16a34a;
+  --color-green-500: #22c55e;
+  --color-green-400: #4ade80;
+  --color-green-300: #86efac;
+  --color-green-200: #bbf7d0;
+  --color-green-100: #dcfce7;
+  --color-green-50: #f0fdf4;
+
+  /* Red */
+  --color-red-900: #7f1d1d;
+  --color-red-800: #991b1b;
+  --color-red-700: #b91c1c;
+  --color-red-600: #dc2626;
+  --color-red-500: #ef4444;
+  --color-red-400: #f87171;
+  --color-red-300: #fca5a5;
+  --color-red-200: #fecaca;
+  --color-red-100: #fee2e2;
+  --color-red-50: #fef2f2;
+
+  /*  Yellow */
+  --color-yellow-900: #78350f;
+  --color-yellow-800: #92400e;
+  --color-yellow-700: #b45309;
+  --color-yellow-600: #d97706;
+  --color-yellow-500: #f59e0b;
+  --color-yellow-400: #fbbf24;
+  --color-yellow-300: #fcd34d;
+  --color-yellow-200: #fde68a;
+  --color-yellow-100: #fef3c7;
+  --color-yellow-50: #fffbeb;
+
+  /* Blue */
+  --color-blue-900: #1e3a8a;
+  --color-blue-800: #1e40af;
+  --color-blue-700: #1d4ed8;
+  --color-blue-600: #2563eb;
+  --color-blue-500: #3b82f6;
+  --color-blue-400: #60a5fa;
+  --color-blue-300: #93c5fd;
+  --color-blue-200: #bfdbfe;
+  --color-blue-100: #dbeafe;
+  --color-blue-50: #eff6ff;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  /* 1920x1080 기준 레이아웃의 기본 여백을 clamp로 유동화 */
+  --fluid-space-x: clamp(12px, 2.6vw, 50px);
+  --fluid-space-y: clamp(8px, 1vw, 12px);
+  --fluid-content-size: clamp(13px, 0.78vw, 16px);
+  --fluid-content-gap: clamp(8px, 1vw, 18px);
+  --fluid-container-x: var(--fluid-space-x);
+  --fluid-card-w: clamp(280px, 19vw, 360px);
+  --fluid-modal-sm-w: clamp(320px, 32vw, 420px);
+  --fluid-modal-md-w: clamp(340px, 40vw, 600px);
+  --fluid-modal-lg-w: clamp(360px, 52vw, 900px);
+  --fluid-control-h: clamp(34px, 2.6vh, 42px);
+  --fluid-btn-w-sm: clamp(84px, 6.2vw, 110px);
+  --fluid-btn-w-md: clamp(96px, 8vw, 138px);
+  --fluid-btn-w-lg: clamp(110px, 9vw, 160px);
+  --fluid-title-lg: clamp(1.25rem, 1.4vw, 1.875rem);
+  --fluid-title-md: clamp(1.05rem, 1vw, 1.25rem);
+}
+
+/* 복사되 토스트 애니메이션 */
+@keyframes toast-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+.animate-toast-pop {
+  animation: toast-pop 0.22s ease-out both;
+}
+
+@layer utilities {
+  .font-eng {
+    font-family: "inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-kr {
+    font-family: "sCoreDream", sans-serif;
+  }
+
+  .fluid-space-x {
+    padding-inline: var(--fluid-space-x);
+  }
+
+  .fluid-space-y {
+    padding-block: var(--fluid-space-y);
+  }
+
+  .fluid-space {
+    padding: var(--fluid-space-y) var(--fluid-space-x);
+  }
+
+  .fluid-container {
+    width: 100%;
+    max-width: 1500px;
+    margin-inline: auto;
+    padding-inline: var(--fluid-container-x);
+  }
+
+  .fluid-content-size {
+    font-size: var(--fluid-content-size);
+  }
+
+  .fluid-content-gap {
+    gap: var(--fluid-content-gap);
+  }
+
+  .fluid-card-w {
+    width: var(--fluid-card-w);
+  }
+
+  .fluid-modal-sm {
+    width: var(--fluid-modal-sm-w);
+    max-width: 92vw;
+  }
+
+  .fluid-modal-md {
+    width: var(--fluid-modal-md-w);
+    max-width: 94vw;
+  }
+
+  .fluid-modal-lg {
+    width: var(--fluid-modal-lg-w);
+    max-width: 95vw;
+  }
+
+  .fluid-btn-w-sm {
+    inline-size: min(100%, var(--fluid-btn-w-sm));
+  }
+
+  .fluid-btn-w-md {
+    inline-size: min(100%, var(--fluid-btn-w-md));
+  }
+
+  .fluid-btn-w-lg {
+    inline-size: min(100%, var(--fluid-btn-w-lg));
+  }
+
+  .fluid-control-h {
+    height: var(--fluid-control-h);
+    min-height: var(--fluid-control-h);
+  }
+
+  .fluid-title-lg {
+    font-size: var(--fluid-title-lg);
+    line-height: 1.25;
+  }
+
+  .fluid-title-md {
+    font-size: var(--fluid-title-md);
+    line-height: 1.35;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #000000;
+  }
+}
+
+body {
+  background: var(--background);
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.monaco-editor.focused {
+  outline: none !important;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset {
+  color: #e5e7eb;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h1,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h2,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h3,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h4,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h5,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset h6 {
+  color: #f9fafb;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset a {
+  color: #93c5fd;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset hr {
+  background-color: #4b5563;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset blockquote {
+  color: #cbd5e1;
+  border-left-color: #4b5563;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset code:not(.hljs):not(.highlight-chroma) {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset pre {
+  background-color: #111827;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset table td,
+.vditor-preview-pane.vditor-preview-dark .vditor-reset table th {
+  border-color: #4b5563;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset table th {
+  background-color: #111827;
+}
+
+.vditor-preview-pane.vditor-preview-dark .vditor-reset table tbody tr:nth-child(2n) {
+  background-color: #1f2937;
+}
+
+/* Fit preview images to the current markdown panel width */
+.vditor-preview-pane .vditor-reset img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-inline-size: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  object-fit: contain;
+}
+
+/* Widen legacy page containers that use max-w-[1200px] */
+@media (min-width: 1024px) {
+  .max-w-\[1200px\] {
+    max-width: min(1680px, calc(100vw - 96px)) !important;
+  }
+}

@@ -1,0 +1,68 @@
+# Markdown & LaTeX Test
+
+## Headings
+
+# Heading 1  
+## Heading 2  
+### Heading 3  
+
+## Text Styles
+
+**Bold text**  
+*Italic text*  
+***Bold and Italic***  
+
+## Lists
+
+- Item 1
+- Item 2
+  - Sub-item 2.1
+  - Sub-item 2.2
+
+1. First
+2. Second
+3. Third
+
+## Links and Images
+
+[OpenAI](https://openai.com)  
+![Sample Image](https://via.placeholder.com/150)
+
+## Code Blocks
+
+```javascript
+console.log("Hello, world!");
+```
+
+Inline code: `printf()`
+
+## Inline Math
+
+The equation of a line is $y = mx + b$.
+
+Euler's identity: $e^{i\pi} + 1 = 0$.
+
+## Display Math
+
+$$
+\int_{0}^{\infty} e^{-x} \, dx = 1
+$$
+
+$$
+\binom{n}{k} = \frac{n!}{k!(n-k)!}
+$$
+
+## Tables
+
+| a | b | c |
+|---|---|---|
+| 1 | 2 | 3 |
+| 4 | 5 | 6 |
+
+## Nested LaTeX
+
+The sum of the first \(n\) integers:
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$

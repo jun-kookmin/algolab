@@ -1,0 +1,250 @@
+
+services:
+  nginx-proxy:
+    image: nginx:1.27-alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-certs:/etc/letsencrypt:ro
+      - ./nginx-confs/algolab.conf:/etc/nginx/templates/algolab-https.conf:ro
+      - ./nginx-confs/algolab-http.conf:/etc/nginx/templates/algolab-http.conf:ro
+      - ./backend/staticfiles:/var/www/algolab/static:ro
+      - certbot-webroot:/var/www/certbot
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+      certbot:
+        condition: service_started
+    environment:
+      TZ: Asia/Seoul
+    command:
+      - /bin/sh
+      - -c
+      - |
+        CERT_FULL=/etc/letsencrypt/live/${APP_DOMAIN:?APP_DOMAIN is required}/fullchain.pem
+        CERT_KEY=/etc/letsencrypt/live/${APP_DOMAIN:?APP_DOMAIN is required}/privkey.pem
+        HTTP_TEMPLATE=/etc/nginx/templates/algolab-http.conf
+        HTTPS_TEMPLATE=/etc/nginx/templates/algolab-https.conf
+        HTTP_CONF=/tmp/algolab-http.conf
+        HTTPS_CONF=/tmp/algolab-https.conf
+        RELOAD_MARKER=/var/www/certbot/.nginx-reload
+        RELOAD_MARKER_LAST=/tmp/.nginx-reload.last
+
+        sed "s/example.com/${APP_DOMAIN:?APP_DOMAIN is required}/g" "$$HTTP_TEMPLATE" > "$$HTTP_CONF"
+        sed "s/example.com/${APP_DOMAIN:?APP_DOMAIN is required}/g" "$$HTTPS_TEMPLATE" > "$$HTTPS_CONF"
+
+        if [ -f "$$CERT_FULL" ] && [ -f "$$CERT_KEY" ]; then
+          cp "$$HTTPS_CONF" /etc/nginx/conf.d/default.conf
+        else
+          cp "$$HTTP_CONF" /etc/nginx/conf.d/default.conf
+        fi
+
+        (
+          while :; do
+            if [ -f "$$CERT_FULL" ] && [ -f "$$CERT_KEY" ]; then
+              if ! grep -q "ssl_certificate" /etc/nginx/conf.d/default.conf; then
+                cp "$$HTTPS_CONF" /etc/nginx/conf.d/default.conf
+                nginx -s reload || true
+              fi
+              if [ -f "$$RELOAD_MARKER" ]; then
+                if ! cmp -s "$$RELOAD_MARKER" "$$RELOAD_MARKER_LAST" 2>/dev/null; then
+                  cp "$$RELOAD_MARKER" "$$RELOAD_MARKER_LAST" 2>/dev/null || true
+                  nginx -s reload || true
+                fi
+              fi
+            fi
+            sleep 60
+          done
+        ) &
+
+        exec nginx -g "daemon off;"
+    networks:
+      algolab:
+        aliases:
+          - nginx.local
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - nginx-certs:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        mkdir -p /var/www/certbot/.well-known/acme-challenge
+        if [ ! -f /etc/letsencrypt/live/${APP_DOMAIN:?APP_DOMAIN is required}/fullchain.pem ]; then
+          until certbot certonly --webroot -w /var/www/certbot --preferred-challenges http --non-interactive --agree-tos --email "${CERTBOT_EMAIL:?CERTBOT_EMAIL is required}" -d "${APP_DOMAIN:?APP_DOMAIN is required}" --keep-until-expiring --expand; do
+            echo "certbot: certificate issuance failed, retrying in 30s..."
+            sleep 30
+          done
+          date +%s > /var/www/certbot/.nginx-reload
+        fi
+        while :; do
+          certbot renew --webroot -w /var/www/certbot --quiet --deploy-hook "sh -c 'date +%s > /var/www/certbot/.nginx-reload'"
+          sleep 43200
+        done
+    networks:
+      algolab:
+        aliases:
+          - certbot.local
+
+
+  postgres:
+    image: postgres:16
+    container_name: algolab-postgres
+    restart: always
+    environment:
+      - TZ=Asia/Seoul
+      - POSTGRES_DB=algolab
+      - POSTGRES_USER=algolab
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?DB_PASSWORD is required}
+    networks:
+      algolab:
+        aliases:
+          - postgres.local
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-algolab} -d ${POSTGRES_DB:-algolab}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: backend.settings.prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+      redis-result:
+        condition: service_healthy
+    working_dir: /app
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; s=socket.create_connection(('127.0.0.1',8000),2); s.close()\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    volumes:
+      - ./backend:/app
+    networks:
+      algolab:
+        aliases:
+          - backend.local
+
+  frontend:
+    build:
+      context: ./Frontend/src
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./Frontend/src/.env
+    environment:
+      - TZ=Asia/Seoul
+      - BACKEND_INTERNAL_URL=http://backend:8000
+    restart: always
+    working_dir: /app
+    command: npm run start
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000').then(()=>process.exit(0)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
+    networks:
+      algolab:
+        aliases:
+          - frontend.local
+
+  redis:
+    image: redis:7.4
+    container_name: redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD is required}"]
+    volumes:
+      - ./infra/redis/data:/data
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      algolab:
+        aliases:
+          - redis.local
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a '${REDIS_PASSWORD:?REDIS_PASSWORD is required}' ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  redis-cache:
+    image: redis:7.4
+    container_name: redis-cache
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD is required}"]
+    volumes:
+      - redis_cache:/data
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      algolab:
+        aliases:
+          - redis-cache.local
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a '${REDIS_PASSWORD:?REDIS_PASSWORD is required}' ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  redis-result:
+    image: redis:7.4
+    container_name: redis-result
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD is required}"]
+    volumes:
+      - redis_result:/data
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      algolab:
+        aliases:
+          - redis-result.local
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a '${REDIS_PASSWORD:?REDIS_PASSWORD is required}' ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+networks:
+  algolab:
+    driver: bridge
+
+volumes:
+  nginx-certs:
+  postgres:
+  redis_result:
+  redis_cache:
+  certbot-webroot:
